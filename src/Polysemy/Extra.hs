@@ -1,6 +1,5 @@
 {-# LANGUAGE BlockArguments #-}
 {-# LANGUAGE DataKinds      #-}
-{-# LANGUAGE ExplicitForAll #-}
 {-# LANGUAGE GADTs          #-}
 {-# LANGUAGE LambdaCase     #-}
 {-# LANGUAGE PolyKinds      #-}
