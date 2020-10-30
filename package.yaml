@@ -10,7 +10,7 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
-synopsis:            Run a KVStore as a filesystem in polysemy.
+synopsis:            Extra Input and Output functions for polysemy..
 category:            Polysemy
 
 dependencies:
