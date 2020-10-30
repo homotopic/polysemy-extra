@@ -5,6 +5,13 @@
 
 packages:
 - completed:
+    hackage: compact-0.2.0.0@sha256:9c5785bdc178ea6cf8f514ad35a78c64220e3cdb22216534e4cf496765551c7e,2345
+    pantry-tree:
+      size: 546
+      sha256: 6f7da573fbcddc109e1521edc07f1b34d7506473a3930074453e829daf901d71
+  original:
+    hackage: compact-0.2.0.0
+- completed:
     hackage: polysemy-zoo-0.7.0.1@sha256:60c2921df95f61d43222a75adde4f330e9510320b416132838a354cd81b4bcc5,3846
     pantry-tree:
       size: 2979

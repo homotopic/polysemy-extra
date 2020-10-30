@@ -37,10 +37,10 @@ runKVStoreAsKVStoreSem :: forall k v k' v' r a.
                        -> Sem (KVStore k v ': r) a
                        -> Sem r a
 runKVStoreAsKVStoreSem f g h = interpret \case
-  LookupKV k   -> f k >>= lookupKV @k' @v' >>= sequence . fmap h
+  LookupKV k   -> f k >>= lookupKV @k' @v' >>= mapM h
   UpdateKV k x -> do
     z  <- f k
-    z' <- sequence . fmap g $ x
+    z' <- mapM g x
     updateKV @k' @v' z z'
 
 -- | Run an `Output (Map k v)` as a `KVStore` by writing the values to
