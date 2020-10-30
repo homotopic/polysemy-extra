@@ -1,0 +1,23 @@
+name:                polysemy-extra
+version:             0.1.0.0
+git:                 https://gitlab.com/homotopic-tech/polysemy-extra
+license:             MIT
+author:              "Daniel Firth"
+maintainer:          "dan.firth@homotopic.tech"
+copyright:           "2020 Daniel Firth"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+synopsis:            Run a KVStore as a filesystem in polysemy.
+category:            Polysemy
+
+dependencies:
+- base >= 4.7 && < 5
+- containers
+- polysemy
+- polysemy-zoo
+
+library:
+  source-dirs: src

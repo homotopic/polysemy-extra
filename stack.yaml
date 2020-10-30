@@ -1,0 +1,7 @@
+resolver: nightly-2020-10-29
+packages:
+- .
+extra-deps:
+- compact-0.2.0.0
+- polysemy-zoo-0.7.0.1
+- unliftio-path-0.0.2.0
