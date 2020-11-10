@@ -5,6 +5,13 @@
 
 packages:
 - completed:
+    hackage: Cabal-3.0.2.0@sha256:f45ee078a8529d1ad3993767345ac83304c7f2ff5eec02c455a1dc200ad22c67,26714
+    pantry-tree:
+      size: 40207
+      sha256: 653461a4e58b10a6ef9d6ed5e07b1f8839ed46b4673133ecbe3899a48d6b983b
+  original:
+    hackage: Cabal-3.0.2.0
+- completed:
     hackage: compact-0.2.0.0@sha256:9c5785bdc178ea6cf8f514ad35a78c64220e3cdb22216534e4cf496765551c7e,2345
     pantry-tree:
       size: 546
@@ -18,9 +25,16 @@ packages:
       sha256: af39e295a7831e6bca01fa78df6c538cb6f1dfb339d118056fd0d9c314925726
   original:
     hackage: polysemy-zoo-0.7.0.1
+- completed:
+    hackage: polysemy-1.4.0.0@sha256:0245a046eaf936557d4208b5a355df1a20799c9e274f91fa889ab2644ecbabae,6541
+    pantry-tree:
+      size: 4379
+      sha256: babfd86f145bc6017f7b8c20e46266ab3a3bb5d5d415d8cf651036b11e57465a
+  original:
+    hackage: polysemy-1.4.0.0
 snapshots:
 - completed:
-    size: 543560
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/10/29.yaml
-    sha256: c8101bf4e679881fd9a6c8dcbdfc9586e119bdb2aad401f5c7e9bc0f8dac5622
-  original: nightly-2020-10-29
+    size: 547770
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/11/10.yaml
+    sha256: 8369690e5a836ed84ae357bb3b53cae08f7cf364031c62cd1686e13c8c91b6a2
+  original: nightly-2020-11-10
