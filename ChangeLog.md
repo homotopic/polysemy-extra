@@ -1,5 +1,9 @@
 # Changelog for polysemy-extra
 
+## v0.1.2.0
+
+* Add `rotateEffects2`, `rotateEffects3L` and `rotateEffects3R`.
+
 ## v0.1.1.0
 
 * Add `reinterpretUnder`, `reinterpretUnder2` and `reinterpret2Under`.
