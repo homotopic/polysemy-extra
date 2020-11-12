@@ -29,7 +29,7 @@ module Polysemy.Extra (
 , runKVStoreAsKVStore
 , runKVStoreAsKVStoreSem
 
--- * Combinatorial Reinterpreters
+-- * Reinterpreters
 , reinterpretUnder
 , reinterpretUnder2
 , reinterpret2Under
