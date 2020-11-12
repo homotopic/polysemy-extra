@@ -19,10 +19,12 @@ module Polysemy.Extra (
 -- * Input
   contramapInput
 , contramapInputSem
+, contramapInput'
 
 -- * Output
 , mapOutput
 , mapOutputSem
+, mapOutput'
 , runOutputMapAsKVStore
 
 -- * KVStore
@@ -123,10 +125,22 @@ mapOutput f = interpret \case
   Output o -> output (f o)
 {-# INLINE mapOutput #-}
 
+-- | Reinterpreting version of `mapOutput`.
+--
+-- @since 0.1.4.0
+mapOutput' :: Members '[ Output o' ] r
+           => (o -> o')
+              -- ^ A function to map the old output to the new output.
+           -> Sem (Output o  ': r) a
+           -> Sem (Output o' ': r) a
+mapOutput' f = raiseUnder >>> mapOutput f
+{-# INLINE mapOutput' #-}
+
 -- | Map an `Output` covariantly through a monadic function.
 --
 -- @since 0.1.0.0
-mapOutputSem :: Members '[ Output o' ] r
+mapOutputSem :: forall o o' r a.
+                Members '[ Output o' ] r
              => (o -> Sem r o')
                 -- ^ A function to map the old output to the new output.
              -> Sem (Output o ': r) a
@@ -136,19 +150,31 @@ mapOutputSem f = interpret \case
 {-# INLINE mapOutputSem #-}
 
 -- | Map an `Input` contravariantly.
+--
 -- @since 0.1.0.0
 contramapInput :: forall i i' r a.
-            Members '[ Input i' ] r
-         => (i' -> i)
-            -- ^ A function to map the new input to the old input.
-         -> Sem (Input i ': r) a
-         -> Sem r a
+                  Members '[ Input i' ] r
+               => (i' -> i)
+                  -- ^ A function to map the new input to the old input.
+               -> Sem (Input i ': r) a
+               -> Sem r a
 contramapInput f = interpret \case
   Input -> f <$> input @i'
 {-# INLINE contramapInput #-}
 
--- | Map an `Input` contravariantly through a monadic function.
+-- | Reinterpreting version of `contramapInput`.
 --
+-- @since 0.1.4.0
+contramapInput' :: forall i i' r a.
+                   Members '[ Input i' ] r
+               => (i' -> i)
+                  -- ^ A function to map the new input to the old input.
+               -> Sem (Input i  ': r) a
+               -> Sem (Input i' ': r) a
+contramapInput' f = raiseUnder >>> contramapInput f
+{-# INLINE contramapInput' #-}
+
+-- | Map an `Input` contravariantly through a monadic function.
 -- @since 0.1.0.0
 contramapInputSem :: forall i i' r a.
                      Members '[ Input i' ] r
@@ -191,7 +217,6 @@ reinterpretUnder2 f = raise3Under @e1 @e1 @e2 @e3
                   >>> raise3Under @e4 @e4 @e1 @e2
                   >>> subsumeUsing @e4 (There $ There Here)
 {-# INLINE reinterpretUnder2 #-}
-
 
 -- | Reinterpret the second effect in the stack in terms of two effects.
 --

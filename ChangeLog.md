@@ -1,5 +1,9 @@
 # Changelog for polysemy-extra
 
+## v0.1.4.0
+
+* Add reinterpreting versions of `contramapInput` and `mapOutput`.
+
 ## v0.1.3.0
 
 * Add `raise4Under`, `rotateEffects4L`, `rotateEffects4R`.
