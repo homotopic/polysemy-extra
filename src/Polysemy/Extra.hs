@@ -29,6 +29,9 @@ module Polysemy.Extra (
 , runKVStoreAsKVStore
 , runKVStoreAsKVStoreSem
 
+-- * Raise
+, raise4Under
+
 -- * Reinterpreters
 , reinterpretUnder
 , reinterpretUnder2
@@ -38,6 +41,13 @@ module Polysemy.Extra (
 , rotateEffects2
 , rotateEffects3L
 , rotateEffects3R
+, rotateEffects4L
+, rotateEffects4R
+
+-- * Reverse
+, reverseEffects2
+, reverseEffects3
+, reverseEffects4
 ) where
 
 import Control.Arrow
@@ -47,6 +57,8 @@ import Polysemy.KVStore
 import Polysemy.Input
 import Polysemy.Output
 import Polysemy.Membership
+import Polysemy.Internal
+import Polysemy.Internal.Union
 
 -- | Run a `KVStore` in terms of another `KVStore` by way of pure key and value
 -- transformations.
@@ -187,6 +199,19 @@ reinterpret2Under f = raise2Under @e1 @e1 @e2
                   >>> raise3Under @e4 @e4 @e1 @e3
                   >>> subsumeUsing @e4 (There $ There Here)
 
+-- | Like `raise`, but introduces an effect four levels underneath the head of the list.
+--
+-- @since 0.1.3.0
+raise4Under :: forall e5 e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e1 ': e2 ': e3 ': e4 ': e5 ': r) a
+raise4Under = hoistSem $ hoist raise4Under . weaken4Under
+  where
+    weaken4Under :: forall m x. Union (e1 : e2 : e3 : e4 : r) m x -> Union (e1 : e2 : e3 : e4 : e5 : r) m x
+    weaken4Under (Union Here a) = Union Here a
+    weaken4Under (Union (There Here) a) = Union (There Here) a
+    weaken4Under (Union (There (There Here)) a) = Union (There (There Here)) a
+    weaken4Under (Union (There (There (There Here))) a) = Union (There (There (There Here))) a
+    weaken4Under (Union (There (There (There (There n)))) a) = Union (There (There (There (There (There n))))) a
+
 -- | Swap the positions of the first two effects in the stack.
 --
 -- @since 0.1.2.0
@@ -204,3 +229,33 @@ rotateEffects3L = raise3Under >>> subsumeUsing (There $ There Here)
 -- @since 0.1.2.0
 rotateEffects3R :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e3 ': e1 ': e2 ': r) a
 rotateEffects3R = rotateEffects3L >>> rotateEffects3L
+
+-- | Rotate the first four effects in the stack to the left.
+--
+-- @since 0.1.3.0
+rotateEffects4L :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e2 ': e3 ': e4 ': e1 ': r) a
+rotateEffects4L = raise4Under >>> subsumeUsing (There $ There $ There Here)
+
+-- | Rotate the first four effects in the stack to the right.
+--
+-- @since 0.1.3.0
+rotateEffects4R :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e4 ': e1 ': e2 ': e3 ': r) a
+rotateEffects4R = rotateEffects4L >>> rotateEffects4L >>> rotateEffects4L
+
+-- | Reverse the position of the first two effects in the stack, equivalent to `rotateEffects2`.
+--
+-- @since 0.1.3.0
+reverseEffects2 :: forall e1 e2 r a. Sem (e1 ': e2 ': r) a -> Sem (e2 ': e1 ': r) a
+reverseEffects2 = rotateEffects2
+
+-- | Reverse the position of the first three effects in the stack.
+--
+-- @since 0.1.3.0
+reverseEffects3 :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e3 ': e2 ': e1 ': r) a
+reverseEffects3 = rotateEffects3L >>> rotateEffects2
+
+-- | Reverse the position of the first four effects in the stack.
+--
+-- @since 0.1.3.0
+reverseEffects4 :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e4 ': e3 ': e2 ': e1 ': r) a
+reverseEffects4 = rotateEffects4L >>> rotateEffects3L >>> rotateEffects2
