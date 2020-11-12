@@ -76,6 +76,7 @@ runKVStoreAsKVStore :: forall k v k' v' r a.
 runKVStoreAsKVStore f g h = reinterpret \case
   LookupKV k   -> fmap h <$> lookupKV @k' @v' (f k)
   UpdateKV k x -> updateKV @k' @v' (f k) (fmap g x)
+{-# INLINE runKVStoreAsKVStore #-}
 
 -- | Run a `KVStore` in terms of another `KVStore` by way of transforming the
 -- keys and values with Sem functions.
@@ -97,6 +98,7 @@ runKVStoreAsKVStoreSem f g h = interpret \case
     z  <- f k
     z' <- mapM g x
     updateKV @k' @v' z z'
+{-# INLINE runKVStoreAsKVStoreSem #-}
 
 -- | Run an `Output` (`Map` k v) as a `KVStore` by writing the values to
 -- the keys.
@@ -107,6 +109,7 @@ runOutputMapAsKVStore :: Members '[ KVStore k v ] r
                       -> Sem r a
 runOutputMapAsKVStore = interpret \case
   Output xs -> mapM_ (uncurry writeKV) (Map.toList xs)
+{-# INLINE runOutputMapAsKVStore #-}
 
 -- | Map an `Output` covariantly.
 --
@@ -118,6 +121,7 @@ mapOutput :: Members '[ Output o' ] r
           -> Sem r a
 mapOutput f = interpret \case
   Output o -> output (f o)
+{-# INLINE mapOutput #-}
 
 -- | Map an `Output` covariantly through a monadic function.
 --
@@ -129,6 +133,7 @@ mapOutputSem :: Members '[ Output o' ] r
              -> Sem r a
 mapOutputSem f = interpret \case
   Output o -> f o >>= output
+{-# INLINE mapOutputSem #-}
 
 -- | Map an `Input` contravariantly.
 -- @since 0.1.0.0
@@ -140,6 +145,7 @@ contramapInput :: forall i i' r a.
          -> Sem r a
 contramapInput f = interpret \case
   Input -> f <$> input @i'
+{-# INLINE contramapInput #-}
 
 -- | Map an `Input` contravariantly through a monadic function.
 --
@@ -152,6 +158,7 @@ contramapInputSem :: forall i i' r a.
                   -> Sem r a
 contramapInputSem f = interpret \case
   Input -> f =<< input @i'
+{-# INLINE contramapInputSem #-}
 
 -- | Reinterpret the second effect in the stack into a single effect.
 --
@@ -166,6 +173,7 @@ reinterpretUnder f = raise2Under @e1 @e1 @e2
                  >>> f
                  >>> raise2Under @e3 @e3 @e1
                  >>> subsumeUsing @e3 (There Here)
+{-# INLINE reinterpretUnder #-}
 
 -- | Reinterpret the third effect in the stack into a single effect.
 --
@@ -182,6 +190,8 @@ reinterpretUnder2 f = raise3Under @e1 @e1 @e2 @e3
                   >>> f
                   >>> raise3Under @e4 @e4 @e1 @e2
                   >>> subsumeUsing @e4 (There $ There Here)
+{-# INLINE reinterpretUnder2 #-}
+
 
 -- | Reinterpret the second effect in the stack in terms of two effects.
 --
@@ -198,6 +208,7 @@ reinterpret2Under f = raise2Under @e1 @e1 @e2
                   >>> subsumeUsing @e3 (There $ There Here)
                   >>> raise3Under @e4 @e4 @e1 @e3
                   >>> subsumeUsing @e4 (There $ There Here)
+{-# INLINE reinterpret2Under #-}
 
 -- | Like `raise`, but introduces an effect four levels underneath the head of the list.
 --
@@ -211,51 +222,61 @@ raise4Under = hoistSem $ hoist raise4Under . weaken4Under
     weaken4Under (Union (There (There Here)) a) = Union (There (There Here)) a
     weaken4Under (Union (There (There (There Here))) a) = Union (There (There (There Here))) a
     weaken4Under (Union (There (There (There (There n)))) a) = Union (There (There (There (There (There n))))) a
+    {-# INLINE weaken4Under #-}
+{-# INLINE raise4Under #-}
 
 -- | Swap the positions of the first two effects in the stack.
 --
 -- @since 0.1.2.0
 rotateEffects2 :: forall e1 e2 r a. Sem (e1 ': e2 ': r) a -> Sem (e2 ': e1 ': r) a
 rotateEffects2 = raise2Under >>> subsumeUsing (There Here)
+{-# INLINE rotateEffects2 #-}
 
 -- | Rotate the first three effects in the stack to the left.
 --
 -- @since 0.1.2.0
 rotateEffects3L :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e2 ': e3 ': e1 ': r) a
 rotateEffects3L = raise3Under >>> subsumeUsing (There $ There Here)
+{-# INLINE rotateEffects3L #-}
 
 -- | Rotate the first three effects in the stack to the right.
 --
 -- @since 0.1.2.0
 rotateEffects3R :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e3 ': e1 ': e2 ': r) a
 rotateEffects3R = rotateEffects3L >>> rotateEffects3L
+{-# INLINE rotateEffects3R #-}
 
 -- | Rotate the first four effects in the stack to the left.
 --
 -- @since 0.1.3.0
 rotateEffects4L :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e2 ': e3 ': e4 ': e1 ': r) a
 rotateEffects4L = raise4Under >>> subsumeUsing (There $ There $ There Here)
+{-# INLINE rotateEffects4L #-}
 
 -- | Rotate the first four effects in the stack to the right.
 --
 -- @since 0.1.3.0
 rotateEffects4R :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e4 ': e1 ': e2 ': e3 ': r) a
 rotateEffects4R = rotateEffects4L >>> rotateEffects4L >>> rotateEffects4L
+{-# INLINE rotateEffects4R #-}
 
 -- | Reverse the position of the first two effects in the stack, equivalent to `rotateEffects2`.
 --
 -- @since 0.1.3.0
 reverseEffects2 :: forall e1 e2 r a. Sem (e1 ': e2 ': r) a -> Sem (e2 ': e1 ': r) a
 reverseEffects2 = rotateEffects2
+{-# INLINE reverseEffects2 #-}
 
 -- | Reverse the position of the first three effects in the stack.
 --
 -- @since 0.1.3.0
 reverseEffects3 :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e3 ': e2 ': e1 ': r) a
 reverseEffects3 = rotateEffects3L >>> rotateEffects2
+{-# INLINE reverseEffects3 #-}
 
 -- | Reverse the position of the first four effects in the stack.
 --
 -- @since 0.1.3.0
 reverseEffects4 :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e4 ': e3 ': e2 ': e1 ': r) a
 reverseEffects4 = rotateEffects4L >>> rotateEffects3L >>> rotateEffects2
+{-# INLINE reverseEffects4 #-}

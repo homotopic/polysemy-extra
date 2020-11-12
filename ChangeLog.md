@@ -4,6 +4,7 @@
 
 * Add `raise4Under`, `rotateEffects4L`, `rotateEffects4R`.
 * Add `reverseEffects2` ,`reverseEffects3`. `reverseEffects4`.
+* Make everything INLINE.
 
 ## v0.1.2.0
 
