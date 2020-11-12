@@ -6,7 +6,6 @@ Stability   : experimental
 
 Extra convenience functions for polysemy.
 -}
-
 {-# LANGUAGE BlockArguments      #-}
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE GADTs               #-}
@@ -189,13 +188,19 @@ reinterpret2Under f = raise2Under @e1 @e1 @e2
                   >>> subsumeUsing @e4 (There $ There Here)
 
 -- | Swap the positions of the first two effects in the stack.
+--
+-- @since 0.1.2.0
 rotateEffects2 :: forall e1 e2 r a. Sem (e1 ': e2 ': r) a -> Sem (e2 ': e1 ': r) a
 rotateEffects2 = raise2Under >>> subsumeUsing (There Here)
 
 -- | Rotate the first three effects in the stack to the left.
+--
+-- @since 0.1.2.0
 rotateEffects3L :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e2 ': e3 ': e1 ': r) a
 rotateEffects3L = raise3Under >>> subsumeUsing (There $ There Here)
 
 -- | Rotate the first three effects in the stack to the right.
+--
+-- @since 0.1.2.0
 rotateEffects3R :: forall e1 e2 e3 r a. Sem (e1 ': e2 ': e3 ': r) a -> Sem (e3 ': e1 ': e2 ': r) a
 rotateEffects3R = rotateEffects3L >>> rotateEffects3L
