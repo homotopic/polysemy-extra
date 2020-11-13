@@ -1,5 +1,9 @@
 # Changelog for polysemy-extra
 
+## v0.1.6.0
+
+* Inline fix for `runInputConstF`.
+
 ## v0.1.5.0
 
 * Add `runInputConstF`.

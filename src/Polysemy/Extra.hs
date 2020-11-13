@@ -195,6 +195,7 @@ runInputConstF :: forall b f r a.
                -> Sem (Input (f b) ': r) a
                -> Sem r a
 runInputConstF = runInputConst @(f b)
+{-# INLINE runInputConstF #-}
 
 -- | Reinterpret the second effect in the stack into a single effect.
 --
