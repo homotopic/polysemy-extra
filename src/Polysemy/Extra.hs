@@ -191,7 +191,7 @@ contramapInputSem f = interpret \case
 --
 -- @since 0.1.5.0
 runInputConstF :: forall b f r a.
-                  (f b)
+                  f b
                -> Sem (Input (f b) ': r) a
                -> Sem r a
 runInputConstF = runInputConst @(f b)
