@@ -20,6 +20,7 @@ module Polysemy.Extra (
   contramapInput
 , contramapInputSem
 , contramapInput'
+, runInputConstF
 
 -- * Output
 , mapOutput
@@ -185,6 +186,15 @@ contramapInputSem :: forall i i' r a.
 contramapInputSem f = interpret \case
   Input -> f =<< input @i'
 {-# INLINE contramapInputSem #-}
+
+-- | Like `runInputConst`, except with a type parameter for the functor for abusing type applications.
+--
+-- @since 0.1.5.0
+runInputConstF :: forall b f r a.
+                  (f b)
+               -> Sem (Input (f b) ': r) a
+               -> Sem r a
+runInputConstF = runInputConst @(f b)
 
 -- | Reinterpret the second effect in the stack into a single effect.
 --

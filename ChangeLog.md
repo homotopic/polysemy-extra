@@ -1,5 +1,9 @@
 # Changelog for polysemy-extra
 
+## v0.1.5.0
+
+* Add `runInputConstF`.
+
 ## v0.1.4.0
 
 * Add reinterpreting versions of `contramapInput` and `mapOutput`.
