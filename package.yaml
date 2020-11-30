@@ -1,5 +1,5 @@
 name:                polysemy-extra
-version:             0.1.6.1
+version:             0.1.7.0
 git:                 https://gitlab.com/homotopic-tech/polysemy-extra
 license:             MIT
 author:              "Daniel Firth"
@@ -16,6 +16,8 @@ category:            Polysemy
 dependencies:
 - base >= 4.7 && < 5
 - containers
+- exceptions
+- extra
 - polysemy >= 1.4.0.0
 - polysemy-zoo
 

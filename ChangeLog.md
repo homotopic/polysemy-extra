@@ -1,5 +1,9 @@
 # Changelog for polysemy-extra
 
+## v0.1.7.0
+
+* Add `irrefutableAbsorbThrow`.
+
 ## v0.1.6.0
 
 * Inline fix for `runInputConstF`.

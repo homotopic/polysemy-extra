@@ -6,6 +6,7 @@ Stability   : experimental
 
 Extra convenience functions for polysemy.
 -}
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE BlockArguments      #-}
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE GADTs               #-}
@@ -51,11 +52,21 @@ module Polysemy.Extra (
 , reverseEffects2
 , reverseEffects3
 , reverseEffects4
+
+-- * Exceptions
+, irrefutableAbsorbThrow
 ) where
 
 import Control.Arrow
+import Control.Monad
+import qualified Control.Monad.Catch as C
+import Control.Monad.Extra
 import Data.Map as Map
 import Polysemy
+import Polysemy.ConstraintAbsorber
+import Polysemy.ConstraintAbsorber.MonadCatch
+import Polysemy.Error
+import Polysemy.Fail
 import Polysemy.KVStore
 import Polysemy.Input
 import Polysemy.Output
@@ -316,3 +327,20 @@ reverseEffects3 = rotateEffects3L >>> rotateEffects2
 reverseEffects4 :: forall e1 e2 e3 e4 r a. Sem (e1 ': e2 ': e3 ': e4 ': r) a -> Sem (e4 ': e3 ': e2 ': e1 ': r) a
 reverseEffects4 = rotateEffects4L >>> rotateEffects3L >>> rotateEffects2
 {-# INLINE reverseEffects4 #-}
+
+-- | Irrefutably absorb a `MonadThrow` constraint as a particular `Exception` type.
+--  This is useful for translating functions that you know use only use
+--  one error type. For more complicated uses of `MonadThrow` it's
+--  probably best to just rewrite the function in terms of `Sem`.
+-- 
+--
+-- @since 0.1.7.0
+irrefutableAbsorbThrow :: forall e r a. (Exception e, Members '[Error e] r)
+                       => (forall m.  C.MonadThrow m => m a)
+                       -> Sem r a
+irrefutableAbsorbThrow f = do
+  k <- runError (absorbMonadThrow f)
+  either (p >=> throw @e) return k
+    where p x = fromMaybeM
+                  (error $ "Irrefutable Cast:  " <> show x)
+                  (return $ C.fromException x)
