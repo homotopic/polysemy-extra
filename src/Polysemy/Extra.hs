@@ -63,10 +63,8 @@ import qualified Control.Monad.Catch as C
 import Control.Monad.Extra
 import Data.Map as Map
 import Polysemy
-import Polysemy.ConstraintAbsorber
 import Polysemy.ConstraintAbsorber.MonadCatch
 import Polysemy.Error
-import Polysemy.Fail
 import Polysemy.KVStore
 import Polysemy.Input
 import Polysemy.Output
