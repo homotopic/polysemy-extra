@@ -1,5 +1,10 @@
 # Changelog for polysemy-extra
 
+## v0.2.0.0
+
+* Remove `runKVStoreAsKVStore` and `runKVStoreAsKVStoreSem` and move to `polysemy-kvstore`.
+* Remove `irrefutableAbsorbThrow` and move to `polysemy-irrefutable-absorb-throw`.
+
 ## v0.1.7.0
 
 * Add `irrefutableAbsorbThrow`.

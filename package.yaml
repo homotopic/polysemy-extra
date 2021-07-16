@@ -1,5 +1,5 @@
 name:                polysemy-extra
-version:             0.1.7.0
+version:             0.2.0.0
 git:                 https://gitlab.com/homotopic-tech/polysemy-extra
 license:             MIT
 author:              "Daniel Firth"
@@ -10,16 +10,14 @@ extra-source-files:
 - README.md
 - ChangeLog.md
 
-synopsis:            Extra Input and Output functions for polysemy..
+synopsis:            Extra Input and Output functions for polysemy.
 category:            Polysemy
 
 dependencies:
 - base >= 4.7 && < 5
 - containers
-- exceptions
-- extra
 - polysemy >= 1.4.0.0
-- polysemy-zoo
+- polysemy-kvstore
 
 ghc-options:
 - -Wall

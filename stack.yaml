@@ -1,8 +1,5 @@
-resolver: nightly-2020-11-10
-packages:
+resolver: nightly-2021-07-16
+ackages:
 - .
 extra-deps:
-- Cabal-3.0.2.0
-- compact-0.2.0.0
-- polysemy-zoo-0.7.0.1
-- polysemy-1.4.0.0
+- polysemy-kvstore-0.1.2.0
