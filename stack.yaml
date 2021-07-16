@@ -1,5 +1,5 @@
 resolver: nightly-2021-07-16
-ackages:
+packages:
 - .
 extra-deps:
 - polysemy-kvstore-0.1.2.0

@@ -15,9 +15,9 @@ category:            Polysemy
 
 dependencies:
 - base >= 4.7 && < 5
-- containers
-- polysemy >= 1.4.0.0
-- polysemy-kvstore
+- containers >= 0.4.0.0 && < 0.7
+- polysemy >= 1.4.0.0 && < 1.7
+- polysemy-kvstore >= 0.1.2.0 && < 0.2
 
 ghc-options:
 - -Wall
